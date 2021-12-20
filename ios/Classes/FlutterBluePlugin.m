@@ -430,7 +430,7 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
   @try {
     NSLog(@"didFailToReconnectPeripheral:tentando conectar");
     [central connectPeripheral:peripheral options:nil];
-  } @catch {
+  } @catch (FlutterError *e){
     NSLog(@"didFailToReconnectPeripheral: conexão falhou");
   }
   [_channel invokeMethod:@"DeviceState" arguments:[self toFlutterData:[self toDeviceStateProto:peripheral state: peripheral.state]]];
