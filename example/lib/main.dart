@@ -51,12 +51,8 @@ class BluetoothOffScreen extends StatelessWidget {
               color: Colors.white54,
             ),
             Text(
-              'Bluetooth Adapter is ${state != null ? state.toString().substring(15) : 'not available'}.',
-              style: Theme.of(context)
-                  .primaryTextTheme
-                  .subhead
-                  ?.copyWith(color: Colors.white),
-            ),
+                'Bluetooth Adapter is ${state != null ? state.toString().substring(15) : 'not available'}.',
+                style: TextStyle(color: Colors.white)),
           ],
         ),
       ),
@@ -255,11 +251,12 @@ class DeviceScreen extends StatelessWidget {
                         : Icons.bluetooth_disabled),
                     snapshot.data == BluetoothDeviceState.connected
                         ? FutureBuilder<int>(
-                        future: device.readRssi(),
-                        builder: (context, snapshot) {
-                          return Text(snapshot.hasData ? '${snapshot.data}' : '',
-                              style: Theme.of(context).textTheme.caption);
-                        })
+                            future: device.readRssi(),
+                            builder: (context, snapshot) {
+                              return Text(
+                                  snapshot.hasData ? '${snapshot.data}' : '',
+                                  style: Theme.of(context).textTheme.caption);
+                            })
                         : Text('', style: Theme.of(context).textTheme.caption),
                   ],
                 ),

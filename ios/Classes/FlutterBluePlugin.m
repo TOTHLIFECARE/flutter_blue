@@ -120,7 +120,10 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
                                    details:nil];
       }
       // TODO: Implement Connect options (#36)
-      [_centralManager connectPeripheral:peripheral options:nil];
+      // [_centralManager connectPeripheral:peripheral options:nil];
+      if([peripheral.state] == CBPeripheralStateDisconnected || [peripheral state] == CBPeripheralStateDisconnecting){
+        [_centralManager connectPeripheral:peripheral options:nil];
+      }
       result(nil);
     } @catch(FlutterError *e) {
       result(e);
@@ -386,7 +389,19 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
   NSLog(@"didConnectPeripheral");
   // Register self as delegate for peripheral
+  // se o usuáro disconnectar manualmente o código do erro será 0
+  if([error code] != 0) {
+    // tenta reconectar
+    @try {
+      NSLog(@"didConnectPeripheral:tentando reconectar");
+      [cental connectPeripheral: peripheral options:nil];
+    } @catch(FlutterError * e) {
+      NSLog(@"didConnectPeripheral:falhou ao tentar reconectar");
+    } 
+  } else {
+    NSLog(@"didDisconnectPeripheral:user disconnected");
   peripheral.delegate = self;
+  }
   
   // Send initial mtu size
   uint32_t mtu = [self getMtu:peripheral];
@@ -407,6 +422,17 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
 
 - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
   // TODO:?
+  // TODO:? Just going to try to issue a reconnect
+  NSLog(@"didFailToReconnectPeripheral");
+
+  //Conexão falhou -> tenta conectar novamente
+  @try {
+    NsNSLog(@"didFailToReconnectPeripheral:tentando conectar");
+    [central connectPeripheral:peripheral options:nil];
+  } @catch {
+    NSLog(@"didFailToReconnectPeripheral: conexão falhou");
+  }
+  [_channel invokeMethod:@"DeviceState" arguments:[self toFlutterData:[self toDeviceStateProto:peripheral state: peripheral.state]]];
 }
 
 //
