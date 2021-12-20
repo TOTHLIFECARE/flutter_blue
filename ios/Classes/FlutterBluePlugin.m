@@ -121,7 +121,7 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
       }
       // TODO: Implement Connect options (#36)
       // [_centralManager connectPeripheral:peripheral options:nil];
-      if([peripheral.state] == CBPeripheralStateDisconnected || [peripheral state] == CBPeripheralStateDisconnecting){
+      if([peripheral state] == CBPeripheralStateDisconnected || [peripheral state] == CBPeripheralStateDisconnecting){
         [_centralManager connectPeripheral:peripheral options:nil];
       }
       result(nil);
@@ -390,18 +390,7 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
   NSLog(@"didConnectPeripheral");
   // Register self as delegate for peripheral
   // se o usuáro disconnectar manualmente o código do erro será 0
-  if([error code] != 0) {
-    // tenta reconectar
-    @try {
-      NSLog(@"didConnectPeripheral:tentando reconectar");
-      [cental connectPeripheral: peripheral options:nil];
-    } @catch(FlutterError * e) {
-      NSLog(@"didConnectPeripheral:falhou ao tentar reconectar");
-    } 
-  } else {
-    NSLog(@"didDisconnectPeripheral:user disconnected");
-  peripheral.delegate = self;
-  }
+ peripheral.delegate = self;
   
   // Send initial mtu size
   uint32_t mtu = [self getMtu:peripheral];
@@ -414,7 +403,19 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
   NSLog(@"didDisconnectPeripheral");
   // Unregister self as delegate for peripheral, not working #42
-  peripheral.delegate = nil;
+    // se o usuáro disconnectar manualmente o código do erro será 0
+   if([error code] != 0) {
+    // tenta reconectar
+    @try {
+      NSLog(@"didConnectPeripheral:tentando reconectar");
+      [central connectPeripheral: peripheral options:nil];
+    } @catch(FlutterError * e) {
+      NSLog(@"didConnectPeripheral:falhou ao tentar reconectar");
+    } 
+  } else {
+    NSLog(@"didDisconnectPeripheral:user disconnected");
+  peripheral.delegate = self;
+  }
   
   // Send connection state
   [_channel invokeMethod:@"DeviceState" arguments:[self toFlutterData:[self toDeviceStateProto:peripheral state:peripheral.state]]];
@@ -427,7 +428,7 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
 
   //Conexão falhou -> tenta conectar novamente
   @try {
-    NsNSLog(@"didFailToReconnectPeripheral:tentando conectar");
+    NSLog(@"didFailToReconnectPeripheral:tentando conectar");
     [central connectPeripheral:peripheral options:nil];
   } @catch {
     NSLog(@"didFailToReconnectPeripheral: conexão falhou");
