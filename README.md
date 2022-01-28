@@ -6,6 +6,11 @@
 <img alt="FlutterBlue" src="https://github.com/pauldemarco/flutter_blue/blob/master/site/flutterblue.png?raw=true" />
 </p>
 <br><br>
+#Bugfix
+* Reconnection in android Xiaomi not working. BluetoothDeviceCache cant result sucess.*
+
+## Changes XIAMI 28 jan 2022
+This contain a altenativity for reconnection in Android Xiaomi when de bluetooth turn off and turn on.
 
 ## Changes for Fork
 

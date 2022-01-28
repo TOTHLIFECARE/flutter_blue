@@ -390,10 +390,27 @@ public class FlutterBluePlugin implements FlutterPlugin, MethodCallHandler, Requ
                     if(bluetoothDeviceCache != null && !isConnected) {
                         if(bluetoothDeviceCache.gatt.connect()){
                             result.success(null);
+                            int state = mBluetoothManager.getConnectionState(device, BluetoothProfile.GATT);
+                            if (state == BluetoothProfile.STATE_DISCONNECTED) {
+                                try {
+                                    // New request, connect and add gattServer to Map
+                                    BluetoothGatt gattServer;
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                        gattServer = device.connectGatt(context, options.getAndroidAutoConnect(), mGattCallback, BluetoothDevice.TRANSPORT_LE);
+                                    } else {
+                                        gattServer = device.connectGatt(context, options.getAndroidAutoConnect(), mGattCallback);
+                                    }
+                                    mDevices.put(deviceId, new BluetoothDeviceCache(gattServer));
+                                    result.success(null);
+                                } catch (Exception e) {
+
+                                }
+                            }
                         } else {
                             result.error("reconnect_error", "error when reconnecting to device", null);
                         }
                         return;
+
                     }
 
                     // New request, connect and add gattServer to Map
