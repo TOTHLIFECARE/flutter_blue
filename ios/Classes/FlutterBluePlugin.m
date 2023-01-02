@@ -78,7 +78,8 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
     NSNumber *logLevelIndex = [call arguments];
     _logLevel = (LogLevel)[logLevelIndex integerValue];
     result(nil);
-  } else if([@"setUniqueId" isEqualToString:call.method]) {
+  } 
+  if([@"setUniqueId" isEqualToString:call.method]) {
       _uniqueId = [call arguments];
       if (!_centralManager){
         result(@(YES));
@@ -406,7 +407,7 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
 }
 
 - (void)centralManager:(CBCentralManager *)central willRestoreState:(NSDictionary<NSString *, id> *)dict {
-    
+     NSLog(@"willRestoreState");
 }
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
