@@ -102,6 +102,11 @@ class FlutterBlue {
     }
   }
 
+  /// Sets a unique id (required on iOS for restoring app on background-scan)
+  /// should be called before any other methods.
+  Future setUniqueId(String uniqueid) =>
+      _channel.invokeMethod('setUniqueId', uniqueid.toString());
+
   /// Starts a scan for Bluetooth Low Energy devices and returns a stream
   /// of the [ScanResult] results as they are received.
   ///
