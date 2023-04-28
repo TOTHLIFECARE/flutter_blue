@@ -408,6 +408,35 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
 
 - (void)centralManager:(CBCentralManager *)central willRestoreState:(NSDictionary<NSString *, id> *)dict {
      NSLog(@"willRestoreState");
+     NSArray<CBPeripheral> *peripherals = dict[CBCentralManagerRestoredStatePeripheralsKey];
+     NSArray<CBPeripheral> *connectedPeripherals = dist[CBCentralManagerRestoredStateConnectedPeripheralsKey];
+     self.centralManager = [[CBCentralManager alloc] initWithDelegate: self queue: nil options: nil];
+     
+     for (CBPeripheral *peripheral in connectedPeripherals) {
+      [self.centralManager connectPeripheral: peripheral options: nil];
+     }
+
+     for (CBPeripheral *peripheral in peripherals) {
+      if(![connectedPeripherals containsObject: peripheral]) {
+        [self.centralManager connectPeripheral: peripheral options:: nil];
+      }
+     }
+  }
+  
+- (void) backgroundFetch:(void (^)(UIBackgroundFetchResult))completionHandler {
+    CBCentralManager *centralManager = [MyCentralManager sharedInstance];
+    CBPeripheral *peripheral = [MyPeripheral sharedInstance];
+    if (peripheral.state == CBPeripheralStateConnected) {
+        CBCharacteristic *characteristic = [peripheral characteristicForUUID:[CBUUID UUIDWithString:@"SUA_UUID"]];
+        if (characteristic != nil) {
+            [peripheral updateValueForCharacteristic:characteristic onSubscribedCentrals:nil];
+            completionHandler(UIBackgroundFetchResultNewData);
+        } else {
+            completionHandler(UIBackgroundFetchResultNoData);
+        }
+    } else {
+        completionHandler(UIBackgroundFetchResultNoData);
+    }
 }
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
