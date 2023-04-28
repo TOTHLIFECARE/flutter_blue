@@ -414,22 +414,6 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
         [self.centralManager connectPeripheral: peripheral options:: nil];      
      }
   }
-  
-- (void) backgroundFetch:(void (^)(UIBackgroundFetchResult))completionHandler {
-    CBCentralManager *centralManager = [MyCentralManager sharedInstance];
-    CBPeripheral *peripheral = [MyPeripheral sharedInstance];
-    if (peripheral.state == CBPeripheralStateConnected) {
-        CBCharacteristic *characteristic = [peripheral characteristicForUUID:[CBUUID UUIDWithString:@"SUA_UUID"]];
-        if (characteristic != nil) {
-            [peripheral updateValueForCharacteristic:characteristic onSubscribedCentrals:nil];
-            completionHandler(UIBackgroundFetchResultNewData);
-        } else {
-            completionHandler(UIBackgroundFetchResultNoData);
-        }
-    } else {
-        completionHandler(UIBackgroundFetchResultNoData);
-    }
-}
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
   [self.scannedPeripherals setObject:peripheral
