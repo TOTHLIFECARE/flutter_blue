@@ -408,9 +408,9 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
 
 - (void)centralManager:(CBCentralManager *)central willRestoreState:(NSDictionary<NSString *, id> *)dict {
      NSLog(@"willRestoreState");
-     NSArray *peripherals = dict[CBCentralManagerRestoredStatePeripheralsKey];
+     NSArray<CBPeripheral *> *per = dict[CBCentralManagerRestoredStatePeripheralsKey];
      self.centralManager = [[CBCentralManager alloc] initWithDelegate: self queue: nil options: nil];
-     for (CBPeripheral *p in peripherals) {
+     for (CBPeripheral *p in per) {
         [self.centralManager connectPeripheral:p options:: nil];      
      }
   }
