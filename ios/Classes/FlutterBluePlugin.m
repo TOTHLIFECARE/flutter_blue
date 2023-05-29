@@ -413,7 +413,7 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
      for (CBPeripheral *p in per) {
         [self.connectedPeripherals setObject: p forKey: p.identifier.UUIDString];
         [self.centralManager connectPeripheral:p options: nil];
-        [p discoverServices: nil]      
+        [p discoverServices: nil];      
 
      }
   }
