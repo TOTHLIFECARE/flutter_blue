@@ -72,6 +72,7 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
                 options: @{CBCentralManagerOptionRestoreIdentifierKey: @"FLUTTER_BLUE_TOTH_ID"}];
     }
   return _centralManager;
+}
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
   if ([@"setLogLevel" isEqualToString:call.method]) {
