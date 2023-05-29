@@ -65,18 +65,13 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
-- (CBCentralManager*) configCentralManager {
+- (CBCentralManager*) centralManager {
    if(!_centralManager){
-    NSLog(@"Config central manager Restore")
+    NSLog(@"Config central manager Restore");
         _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil
                 options: @{CBCentralManagerOptionRestoreIdentifierKey: @"FLUTTER_BLUE_TOTH_ID"}];
     }
   return _centralManager;
-}
-
-- (CBCentralManager*) centralManager {
-  return [FlutterBluePlugin configCentralManager];
-}
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
   if ([@"setLogLevel" isEqualToString:call.method]) {
