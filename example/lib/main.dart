@@ -229,7 +229,7 @@ class DeviceScreen extends StatelessWidget {
                     text,
                     style: Theme.of(context)
                         .primaryTextTheme
-                        .button
+                        .labelLarge
                         ?.copyWith(color: Colors.white),
                   ));
             },
@@ -255,9 +255,10 @@ class DeviceScreen extends StatelessWidget {
                             builder: (context, snapshot) {
                               return Text(
                                   snapshot.hasData ? '${snapshot.data}' : '',
-                                  style: Theme.of(context).textTheme.caption);
+                                  style: Theme.of(context).textTheme.bodySmall);
                             })
-                        : Text('', style: Theme.of(context).textTheme.caption),
+                        : Text('',
+                            style: Theme.of(context).textTheme.bodySmall),
                   ],
                 ),
                 title: Text(
